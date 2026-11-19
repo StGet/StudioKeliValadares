@@ -193,6 +193,52 @@
             imgEl.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
         }
 
+        // Corrige automaticamente imagens com perfil CMYK/canal verde corrompido no navegador
+        function fixGreenChannelArtifact(imgEl) {
+            if (!imgEl || imgEl.dataset.colorFixed) return;
+            imgEl.dataset.colorFixed = "true";
+            try {
+                const w = imgEl.naturalWidth;
+                const h = imgEl.naturalHeight;
+                if (!w || !h) return;
+
+                const probe = document.createElement('canvas');
+                probe.width = 48;
+                probe.height = 48;
+                const pCtx = probe.getContext('2d');
+                pCtx.drawImage(imgEl, 0, 0, 48, 48);
+                const sample = pCtx.getImageData(0, 0, 48, 48).data;
+
+                let rSum = 0, gSum = 0, bSum = 0;
+                for (let i = 0; i < sample.length; i += 4) {
+                    rSum += sample[i];
+                    gSum += sample[i + 1];
+                    bSum += sample[i + 2];
+                }
+
+                // Se houver distorção verde fluorescente (canal G muito superior a R e B)
+                if (gSum > rSum * 1.45 && gSum > bSum * 1.45) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(imgEl, 0, 0, w, h);
+                    const imgData = ctx.getImageData(0, 0, w, h);
+                    const d = imgData.data;
+
+                    for (let i = 0; i < d.length; i += 4) {
+                        const lum = d[i + 1];
+                        // Reconstrói tonalidade quente natural de pele a partir da luminância
+                        d[i]     = Math.min(255, Math.round(lum * 0.94 + 14));
+                        d[i + 1] = Math.min(255, Math.round(lum * 0.72 + 8));
+                        d[i + 2] = Math.min(255, Math.round(lum * 0.58 + 5));
+                    }
+                    ctx.putImageData(imgData, 0, 0);
+                    imgEl.src = canvas.toDataURL('image/jpeg', 0.92);
+                }
+            } catch (e) {}
+        }
+
         function handlePosterError(imgEl, title, subtitle) {
             if (imgEl.dataset.fallbackApplied) return;
             imgEl.dataset.fallbackApplied = "true";
@@ -558,6 +604,7 @@
                                 fetchpriority="high"
                                 decoding="async"
                                 class="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                                onload="fixGreenChannelArtifact(this)"
                                 onerror="handleImageError(this, 'with')"
                             >
                             <div class="absolute inset-0 bg-gradient-to-t from-charcoal-950/80 via-charcoal-950/15 to-transparent"></div>
@@ -618,6 +665,7 @@
                             alt="Depois: Olho com extensão de cílios aplicada no Studio Keli Valadares" 
                             class="comparison-img absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none bg-black"
                             draggable="false"
+                            onload="fixGreenChannelArtifact(this)"
                             onerror="handleImageError(this, 'with')"
                         >
                         <!-- Véu Preto Transparente Sofisticado sobre a área Depois -->
