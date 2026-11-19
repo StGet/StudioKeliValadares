@@ -214,17 +214,17 @@
                     './olho-com-cilios.jpg',
                     'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=900&q=85'
                 ]
-                : kind === 'with'
+                    : kind === 'with'
                     ? [
-                        './olho-com-cilios.jpg',
-                        'olho-com-cilios.jpg',
                         './olho-com-cilios_2.jpg',
+                        'olho-com-cilios_2.jpg',
+                        './olho-com-cilios.jpg',
                         'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=900&q=85'
                     ]
                     : [
-                        './olho-sem-cilios.jpg',
-                        'olho-sem-cilios.jpg',
                         './olho-sem-cilios_2.jpg',
+                        'olho-sem-cilios_2.jpg',
+                        './olho-sem-cilios.jpg',
                         './olho-sem-cilios.jpeg',
                         'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=900&q=85'
                     ];
@@ -242,12 +242,16 @@
         window.updateBeforeAfterSlider = function(val) {
             const pct = Math.max(0, Math.min(100, Number(val)));
             const container = document.getElementById('ba-container');
-            const beforeImg = document.getElementById('comp-before-img');
+            const afterImg = document.getElementById('comp-after-img');
             const divider = document.getElementById('ba-divider');
+            const rangeInput = document.getElementById('ba-range');
 
             if (container) container.setAttribute('aria-valuenow', String(Math.round(pct)));
-            if (beforeImg) beforeImg.style.clipPath = `inset(0 ${pct}% 0 0)`;
+            if (afterImg) afterImg.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
             if (divider) divider.style.left = `${pct}%`;
+            if (rangeInput && Number(rangeInput.value) !== Math.round(pct)) {
+                rangeInput.value = String(Math.round(pct));
+            }
 
             document.querySelectorAll('.ba-preset-btn').forEach(btn => {
                 const target = Number(btn.dataset.target);
@@ -340,13 +344,17 @@
             touch-action: pan-y;
             cursor: ew-resize;
         }
+        #ba-divider-line {
+            background-color: #D4B475 !important;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.45);
+        }
+        #ba-divider-knob {
+            background-color: #1E1A17 !important;
+        }
         #antes-depois img {
             filter: none !important;
             mix-blend-mode: normal !important;
             opacity: 1 !important;
-        }
-        #antes-depois div, #antes-depois span {
-            background: transparent !important;
         }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -606,39 +614,57 @@
                                 id="ba-container"
                                 role="slider"
                                 tabindex="0"
-                                aria-label="Comparador interativo Antes e Depois: arraste para a esquerda para ver Antes ou para a direita para ver Depois"
+                                aria-label="Comparador interativo Antes e Depois com linha divisória central"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
                                 aria-valuenow="50"
-                                class="relative w-full aspect-square rounded-[2rem] overflow-hidden border-2 border-gold/35 select-none focus:outline-none focus:ring-2 focus:ring-gold"
+                                class="relative w-full aspect-square rounded-[2rem] overflow-hidden border-2 border-gold/35 select-none focus:outline-none focus:ring-2 focus:ring-gold shadow-xl"
                             >
-                                <!-- Foto Original DEPOIS -->
-                                <img
-                                    id="comp-after-img"
-                                    src="olho-com-cilios.jpg"
-                                    alt="Olho com extensão de cílios no Stúdio Keli Valadares"
-                                    draggable="false"
-                                    class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
-                                    onerror="handleImageError(this, 'with')"
-                                >
-
-                                <!-- Foto Original ANTES -->
+                                <!-- Foto Base: ANTES (Olho Natural) -->
                                 <img
                                     id="comp-before-img"
-                                    src="olho-sem-cilios.jpg"
+                                    src="olho-sem-cilios_2.jpg"
                                     alt="Olho natural sem extensão de cílios"
+                                    loading="lazy"
+                                    decoding="async"
                                     draggable="false"
                                     class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
-                                    style="clip-path: inset(0 50% 0 0);"
                                     onerror="handleImageError(this, 'without')"
                                 >
 
-                                <!-- Divisória Central com Alça -->
-                                <div id="ba-divider" class="absolute inset-y-0 pointer-events-none" style="left: 50%; transform: translateX(-50%);">
-                                    <div class="w-0.5 h-full bg-gold mx-auto"></div>
-                                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-espresso border-2 border-gold text-gold flex items-center justify-center shadow-lg">
-                                        <i class="ph ph-arrows-left-right text-lg"></i>
+                                <!-- Foto Sobreposta Revelada ao Arrastar: DEPOIS (Com Extensão de Cílios) -->
+                                <img
+                                    id="comp-after-img"
+                                    src="olho-com-cilios_2.jpg"
+                                    alt="Olho com extensão de cílios no Stúdio Keli Valadares"
+                                    loading="lazy"
+                                    decoding="async"
+                                    draggable="false"
+                                    class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+                                    style="clip-path: inset(0 50% 0 0);"
+                                    onerror="handleImageError(this, 'with')"
+                                >
+
+                                <!-- Linha Vertical no Meio com Alça Deslizante -->
+                                <div id="ba-divider" class="absolute inset-y-0 z-20 pointer-events-none" style="left: 50%; transform: translateX(-50%);">
+                                    <div id="ba-divider-line" class="w-[3px] h-full mx-auto"></div>
+                                    <div id="ba-divider-knob" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 border-gold text-gold flex items-center justify-center shadow-2xl">
+                                        <i class="ph ph-arrows-left-right text-xl"></i>
                                     </div>
+                                </div>
+
+                                <!-- Input Range Acessível para Arraste Direto -->
+                                <input
+                                    id="ba-range"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value="50"
+                                    aria-label="Deslize para comparar Antes e Depois"
+                                    oninput="updateBeforeAfterSlider(this.value)"
+                                    class="absolute inset-0 z-30 w-full h-full opacity-0 cursor-ew-resize"
+                                >
+                            </div>
                                 </div>
                             </div>
 
@@ -836,8 +862,8 @@
                                 class="w-full h-full object-cover"
                                 controls
                                 playsinline
-                                preload="metadata"
-                                poster="mulher com cilios.jpeg"
+                                preload="none"
+                                poster="video1-poster.jpg"
                                 onerror="handleVideoFallback(this)"
                             >
                                 <source src="video1.mp4" type="video/mp4">
@@ -862,8 +888,8 @@
                                 class="w-full h-full object-cover"
                                 controls
                                 playsinline
-                                preload="metadata"
-                                poster="olho-com-cilios.jpg"
+                                preload="none"
+                                poster="video2-poster.jpg"
                                 onerror="handleVideoFallback(this)"
                             >
                                 <source src="video2.mp4" type="video/mp4">
@@ -1603,6 +1629,29 @@
                     closeMobileMenu();
                 }
             });
+
+            // Otimização de Vídeo: pausa automática quando sai da área visível e evita dois vídeos simultâneos
+            const studioVideos = document.querySelectorAll('#bastidores video');
+            if (studioVideos.length) {
+                studioVideos.forEach((vid) => {
+                    vid.addEventListener('play', () => {
+                        studioVideos.forEach((other) => {
+                            if (other !== vid && !other.paused) other.pause();
+                        });
+                    });
+                });
+
+                if ('IntersectionObserver' in window) {
+                    const videoObserver = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (!entry.isIntersecting && !entry.target.paused) {
+                                entry.target.pause();
+                            }
+                        });
+                    }, { threshold: 0.25 });
+                    studioVideos.forEach((vid) => videoObserver.observe(vid));
+                }
+            }
 
             // Garante limpeza de qualquer camada verde residual no comparador
             setTimeout(() => {
