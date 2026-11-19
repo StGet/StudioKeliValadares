@@ -612,27 +612,28 @@
                     <div id="before-after-stage" class="relative rounded-[2rem] overflow-hidden shadow-luxury border-2 border-gold-500/35 bg-charcoal-950 aspect-square sm:aspect-[4/3] comparison-stage">
                         
                         <!-- Camada Base (DEPOIS - Com Cílios) -->
+                        <div class="absolute inset-0 bg-black pointer-events-none" aria-hidden="true"></div>
                         <img 
                             src="./olho-com-cilios_2.jpg" 
                             alt="Depois: Olho com extensão de cílios aplicada no Studio Keli Valadares" 
-                            class="comparison-img absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
+                            class="comparison-img absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none bg-black"
                             draggable="false"
                             onerror="handleImageError(this, 'with')"
                         >
-                        <!-- Véu Preto Transparente Sofisticado sobre a área Depois para contraste editorial -->
-                        <div class="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
+                        <!-- Véu Preto Transparente Sofisticado sobre a área Depois -->
+                        <div class="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true"></div>
 
                         <!-- Camada Superior Recortada (ANTES - Sem Cílios) -->
-                        <div id="before-clip-layer" class="absolute inset-0 overflow-hidden pointer-events-none bg-charcoal-950" style="clip-path: inset(0 50% 0 0);">
+                        <div id="before-clip-layer" class="absolute inset-0 overflow-hidden pointer-events-none bg-black" style="clip-path: inset(0 50% 0 0);">
                             <img 
                                 src="./olho-sem-cilios_2.jpg" 
                                 alt="Antes: Olho natural antes da extensão de cílios" 
-                                class="comparison-img absolute inset-0 w-full h-full object-cover object-center select-none"
+                                class="comparison-img absolute inset-0 w-full h-full object-cover object-center select-none bg-black"
                                 draggable="false"
                                 onerror="handleImageError(this, 'without')"
                             >
-                            <!-- Véu Preto Transparente sutil para contraste das etiquetas -->
-                            <div class="absolute inset-0 bg-black/15 pointer-events-none" aria-hidden="true"></div>
+                            <!-- Véu Preto Transparente sutil -->
+                            <div class="absolute inset-0 bg-black/20 pointer-events-none" aria-hidden="true"></div>
                         </div>
 
                         <!-- Etiquetas com Preto Transparente Sofisticado -->
