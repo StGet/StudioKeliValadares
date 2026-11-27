@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap oficial do Studio Keli Valadares (Crimeia Leste, Goiânia e Região Metropolitana)
+Sitemap: https://stget.github.io/studio-keli/sitemap.xml

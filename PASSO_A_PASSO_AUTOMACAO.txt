@@ -1,0 +1,35 @@
+========================================================================
+AUTOMACAO DE 3 PUBLICACOES SEMANAIS — STUDIO KELI VALADARES (SEO 5 KM)
+========================================================================
+
+1. O QUE ESTA NESTE PACOTE:
+   - posts.json                       -> Base dinamica de artigos do blog
+   - scripts/generate-post.mjs        -> Robo escritor de SEO hiperlocal (Node.js)
+   - .github/workflows/auto-blog.yml  -> Agendador automatico (Seg, Qua e Sex as 09h)
+   - sitemap.xml                      -> Mapa do site atualizado automaticamente
+   - robots.txt                       -> Permissao de indexacao para o Google
+
+2. COMO SUBIR NO GITHUB (5 MINUTOS):
+   Passo 1: Descompacte este ZIP no seu computador.
+   Passo 2: Envie os arquivos mantendo a estrutura de pastas na raiz do repositorio studio-keli:
+            - posts.json
+            - robots.txt
+            - sitemap.xml
+            - scripts/generate-post.mjs
+            - .github/workflows/auto-blog.yml
+   Passo 3: No GitHub, va em Settings > Actions > General > Workflow permissions
+            e marque "Read and write permissions" > clique em Save.
+
+3. (OPCIONAL RECOMENDADO) ATIVAR IA GEMINI GRATUITA PARA ARTIGOS 100% INEDITOS:
+   - Crie uma chave gratuita em: https://aistudio.google.com/apikey
+   - No GitHub do seu site, va em: Settings > Secrets and variables > Actions
+   - Clique em "New repository secret":
+       Name: GEMINI_API_KEY
+       Secret: (cole sua chave)
+   - Mesmo SEM a chave, o robo ja funciona sozinho usando o motor editorial local!
+
+4. COMO TESTAR AGORA COM 1 CLIQUE:
+   - No GitHub, abra a aba "Actions".
+   - Clique em "Publicacao Automatica Blog SEO (3x por Semana)".
+   - Clique em "Run workflow" > "Run workflow".
+   - Em 30 segundos, um novo artigo sera adicionado ao posts.json e o site sera atualizado!
